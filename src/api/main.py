@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from unidecode import unidecode
 from nltk.corpus import stopwords
+from fastapi.middleware.cors import CORSMiddleware
 
 nltk.download('stopwords', quiet=True)
 stop_pt = set(stopwords.words('portuguese'))
@@ -24,6 +25,13 @@ def limpeza_stopwords(text: str) -> str:
 
 # App Fast definido
 app = FastAPI(title="Lyrics Genre Classifier")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Schema de entrada
 class LyricsIn(BaseModel):
