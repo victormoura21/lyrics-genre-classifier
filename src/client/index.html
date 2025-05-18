@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Classificador de Gênero Musical</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 2rem auto; }
+    textarea { width: 100%; padding: 0.5rem; font-size: 1rem; }
+    button { margin-top: 0.5rem; padding: 0.5rem 1rem; font-size: 1rem; }
+    #result { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Classificador de Gênero Musical</h1>
+  <p>Cole a letra da música abaixo e clique em “Classificar”:</p>
+  <textarea id="lyrics" rows="10" placeholder="Cole sua letra aqui…"></textarea><br/>
+  <button id="btn">Classificar</button>
+
+  <h2>Gênero previsto: <span id="result">—</span></h2>
+
+  <script>
+    document.getElementById('btn').addEventListener('click', async () => {
+      const lyrics = document.getElementById('lyrics').value;
+      if (!lyrics.trim()) {
+        alert('Por favor, cole alguma letra primeiro.');
+        return;
+      }
+
+      // Desabilita o botão enquanto processa
+      const btn = document.getElementById('btn');
+      btn.disabled = true;
+      btn.innerText = 'Classificando…';
+
+      try {
+        const res = await fetch('http://127.0.0.1:8000/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lyric: lyrics })
+        });
+
+        if (!res.ok) throw new Error(`Erro ${res.status}`);
+
+        const data = await res.json();
+        document.getElementById('result').innerText = data.genre;
+      } catch (err) {
+        console.error(err);
+        alert('Ocorreu um erro ao classificar. Veja o console para mais detalhes.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Classificar';
+      }
+    });
+  </script>
+</body>
+</html>
