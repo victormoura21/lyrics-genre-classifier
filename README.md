@@ -30,7 +30,7 @@ lyrics-genre-classifier/
 ```bash
 # Crie e ative um virtual environment
 python -m venv .venv                # ou python3 -m venv .venv
-.venv\Scripts\Activate.ps1        # Windows PowerShell
+. .\.venv\Scripts\Activate.ps1        # Windows PowerShell
 
 # Instale as dependências
 pip install -r requirements.txt
